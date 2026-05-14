@@ -1,0 +1,116 @@
+@baseUrl = http://localhost:8080/api/v1
+@authToken = {{token}}
+
+
+### Auth: Register
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "username": "Mateus",
+  "email": "test@example.com",
+  "password": "senhasegura"
+}
+
+### Auth: Login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "senhasegura"
+}
+
+### Auth: Me
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{authToken}}
+
+### Checklists: Create
+POST {{baseUrl}}/checklists
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "name": "Project Checklist",
+  "description": "Daily tasks for the project"
+}
+
+### Checklists: List All
+GET {{baseUrl}}/checklists
+Authorization: Bearer {{authToken}}
+
+### Checklists: Get by ID
+# Replace {id} with a valid UUID
+GET {{baseUrl}}/checklists/00000000-0000-0000-0000-000000000000
+Authorization: Bearer {{authToken}}
+
+### Checklists: Update
+# Replace {id} with a valid UUID
+PUT {{baseUrl}}/checklists/00000000-0000-0000-0000-000000000000
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "name": "Updated Checklist Name"
+}
+
+### Checklists: Delete
+# Replace {id} with a valid UUID
+DELETE {{baseUrl}}/checklists/00000000-0000-0000-0000-000000000000
+Authorization: Bearer {{authToken}}
+
+### Checklists: List Tasks
+# Replace {id} with a valid UUID
+GET {{baseUrl}}/checklists/00000000-0000-0000-0000-000000000000/tasks
+Authorization: Bearer {{authToken}}
+
+### Tasks: Create
+POST {{baseUrl}}/tasks
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "title": "Complete documentation",
+  "description": "Finish the api.http file",
+  "priority": "HIGH",
+  "checklistId": null
+}
+
+### Tasks: List All
+GET {{baseUrl}}/tasks?completed=false&priority=HIGH
+Authorization: Bearer {{authToken}}
+
+### Tasks: List Orphans
+GET {{baseUrl}}/tasks/orphan
+Authorization: Bearer {{authToken}}
+
+### Tasks: Get by ID
+# Replace {id} with a valid UUID
+GET {{baseUrl}}/tasks/00000000-0000-0000-0000-000000000000
+Authorization: Bearer {{authToken}}
+
+### Tasks: Update
+# Replace {id} with a valid UUID
+PUT {{baseUrl}}/tasks/00000000-0000-0000-0000-000000000000
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "title": "Updated Task Title",
+  "priority": "MEDIUM"
+}
+
+### Tasks: Complete
+# Replace {id} with a valid UUID
+PATCH {{baseUrl}}/tasks/00000000-0000-0000-0000-000000000000/complete
+Authorization: Bearer {{authToken}}
+
+### Tasks: Reopen
+# Replace {id} with a valid UUID
+PATCH {{baseUrl}}/tasks/00000000-0000-0000-0000-000000000000/reopen
+Authorization: Bearer {{authToken}}
+
+### Tasks: Delete
+# Replace {id} with a valid UUID
+DELETE {{baseUrl}}/tasks/00000000-0000-0000-0000-000000000000
+Authorization: Bearer {{authToken}}
