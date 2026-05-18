@@ -16,7 +16,8 @@ A secure task management application built with Spring Boot, focusing on cyberse
 
 ### Architecture
 - **Layered Structure:** `controller` -> `service` -> `repository` -> `entity`.
-- **DTOs:** Used for API requests and responses (`dto` package).
+- **DTOs:** Used for API requests and responses (`dto` package), implemented as Java Records.
+- **Security Scoping:** All resource-owning entities (Checklists, Tasks) are strictly scoped to the authenticated user in the service layer.
 - **UUIDs:** All primary keys are UUIDs for improved security and decentralization.
 - **Migrations:** Flyway manages schema changes in `src/main/resources/db/migration`.
 

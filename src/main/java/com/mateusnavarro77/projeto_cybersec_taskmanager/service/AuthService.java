@@ -46,7 +46,11 @@ public class AuthService {
 
         User savedUser = userRepository.save(newUser);
 
-        return new UserResponseDTO(savedUser.getId(), savedUser.getRealUsername(), savedUser.getEmail());
+        return UserResponseDTO.builder()
+                .id(savedUser.getId())
+                .username(savedUser.getRealUsername())
+                .email(savedUser.getEmail())
+                .build();
     }
 
     public AuthResponseDTO login(LoginRequestDTO data) {
@@ -55,11 +59,18 @@ public class AuthService {
 
         var token = tokenService.generateToken((User) auth.getPrincipal());
 
-        return new AuthResponseDTO(token, "Bearer");
+        return AuthResponseDTO.builder()
+                .token(token)
+                .type("Bearer")
+                .build();
     }
 
     public UserResponseDTO me() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return new UserResponseDTO(user.getId(), user.getRealUsername(), user.getEmail());
+        return UserResponseDTO.builder()
+                .id(user.getId())
+                .username(user.getRealUsername())
+                .email(user.getEmail())
+                .build();
     }
 }
