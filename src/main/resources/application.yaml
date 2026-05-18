@@ -2,16 +2,10 @@ spring:
   application:
     name: projeto-cybersec-taskmanager
   
-  datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/secure_task_manager}
-    username: ${DB_USERNAME:admin}
-    password: ${DB_PASSWORD:admin123}
-    driver-class-name: org.postgresql.Driver
+  profiles:
+    active: dev
 
   jpa:
-    hibernate:
-      ddl-auto: validate
-    show-sql: true
     properties:
       hibernate:
         format_sql: true
