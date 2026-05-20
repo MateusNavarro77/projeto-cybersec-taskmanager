@@ -16,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -73,7 +74,6 @@ public class AuthServiceTest {
         @DisplayName("Should register user successfully")
         void shouldRegisterUserSuccessfully() {
             RegisterRequestDTO request = new RegisterRequestDTO("testuser", "test@example.com", "password123");
-            given(userRepository.existsByEmail(request.email())).willReturn(false);
             given(passwordEncoder.encode(request.password())).willReturn("hashedPassword");
             given(userRepository.save(any(User.class))).willReturn(user);
 
@@ -89,12 +89,12 @@ public class AuthServiceTest {
         @DisplayName("Should throw exception when email already exists")
         void shouldThrowExceptionWhenEmailExists() {
             RegisterRequestDTO request = new RegisterRequestDTO("testuser", "test@example.com", "password123");
-            given(userRepository.existsByEmail(request.email())).willReturn(true);
+            given(userRepository.save(any(User.class))).willThrow(new DataIntegrityViolationException("duplicate"));
 
             assertThatThrownBy(() -> authService.register(request))
-                    .isInstanceOf(ResponseStatusException.class)
-                    .hasFieldOrPropertyWithValue("status", HttpStatus.BAD_REQUEST)
-                    .hasMessageContaining("Email already exists");
+                .isInstanceOf(ResponseStatusException.class)
+                .hasFieldOrPropertyWithValue("status", HttpStatus.BAD_REQUEST)
+                .hasMessageContaining("Email already exists");
         }
     }
 
