@@ -92,9 +92,9 @@ public class AuthServiceTest {
             given(userRepository.save(any(User.class))).willThrow(new DataIntegrityViolationException("duplicate"));
 
             assertThatThrownBy(() -> authService.register(request))
-                .isInstanceOf(ResponseStatusException.class)
-                .hasFieldOrPropertyWithValue("status", HttpStatus.BAD_REQUEST)
-                .hasMessageContaining("Email already exists");
+                    .isInstanceOf(ResponseStatusException.class)
+                    .hasFieldOrPropertyWithValue("status", HttpStatus.BAD_REQUEST)
+                    .hasMessageContaining("Email already exists");
         }
     }
 
@@ -137,7 +137,7 @@ public class AuthServiceTest {
             assertThat(response.id()).isEqualTo(userId);
             assertThat(response.username()).isEqualTo("testuser");
             assertThat(response.email()).isEqualTo("test@example.com");
-            
+
             SecurityContextHolder.clearContext();
         }
     }
