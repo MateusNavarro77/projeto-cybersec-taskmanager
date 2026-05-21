@@ -19,7 +19,9 @@
 		<license />
 	</licenses>
 	<developers>
-		<developer />
+		<developer>
+			<name>Mateus</name>
+		</developer>
 	</developers>
 	<scm>
 		<connection />
