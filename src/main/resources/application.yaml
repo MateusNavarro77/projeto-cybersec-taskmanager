@@ -18,3 +18,26 @@ api:
   security:
     token:
       secret: ${JWT_SECRET:my-super-secret-key-for-dev-environment-123}
+
+management:
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: "health,metrics,prometheus"
+    access:
+      default: none
+
+  endpoint:
+    health:
+      access: unrestricted
+      show-details: always
+    metrics:
+      access: unrestricted
+    prometheus:
+      access: unrestricted
+
+  prometheus:
+    metrics:
+      export:
+        enabled: true

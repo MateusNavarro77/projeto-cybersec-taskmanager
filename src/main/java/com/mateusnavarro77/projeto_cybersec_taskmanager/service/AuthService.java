@@ -8,6 +8,7 @@ import com.mateusnavarro77.projeto_cybersec_taskmanager.entity.User;
 import com.mateusnavarro77.projeto_cybersec_taskmanager.repository.UserRepository;
 import com.mateusnavarro77.projeto_cybersec_taskmanager.security.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,11 +33,8 @@ public class AuthService {
     private AuthenticationManager authenticationManager;
 
     public UserResponseDTO register(RegisterRequestDTO data) {
-        if (userRepository.existsByEmail(data.email())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email already exists");
-        }
-
         String encryptedPassword = passwordEncoder.encode(data.password());
+
         User newUser = User.builder()
                 .username(data.username())
                 .email(data.email())
@@ -44,13 +42,20 @@ public class AuthService {
                 .role("USER")
                 .build();
 
-        User savedUser = userRepository.save(newUser);
+        try {
+            User savedUser = userRepository.save(newUser);
 
-        return UserResponseDTO.builder()
-                .id(savedUser.getId())
-                .username(savedUser.getRealUsername())
-                .email(savedUser.getEmail())
-                .build();
+            return UserResponseDTO.builder()
+                    .id(savedUser.getId())
+                    .username(savedUser.getRealUsername())
+                    .email(savedUser.getEmail())
+                    .build();
+
+        } catch (DataIntegrityViolationException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Email already exists");
+        }
     }
 
     public AuthResponseDTO login(LoginRequestDTO data) {
