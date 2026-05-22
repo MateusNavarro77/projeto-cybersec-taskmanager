@@ -9,7 +9,7 @@ on:
 
 jobs:
   dependency-check:
-    name: OWASP Dependency Check
+    name: OWASP Dependency Check - SCA
     runs-on: ubuntu-latest
 
     steps:
@@ -28,8 +28,9 @@ jobs:
         id: date
         run: echo "date=$(date +'%Y-%m')" >> $GITHUB_OUTPUT
 
-      - name: Cache OWASP Dependency Check Database
-        uses: actions/cache@v4
+      - name: Restore OWASP Dependency Check Database
+        id: dependency-check-cache-restore
+        uses: actions/cache/restore@v4
         with:
           path: ~/.dependency-check
           key: dependency-check-database-${{ runner.os }}-${{ steps.date.outputs.date }}
@@ -37,9 +38,14 @@ jobs:
             dependency-check-database-${{ runner.os }}-
 
       - name: Run OWASP dependency check
-        env:
-          NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
         run: ./mvnw -B dependency-check:check -Dnvd.api.key=${{ secrets.NVD_API_KEY }} -DdataDirectory=$HOME/.dependency-check
+
+      - name: Save OWASP Dependency Check Database
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: ~/.dependency-check
+          key: dependency-check-database-${{ runner.os }}-${{ steps.date.outputs.date }}
 
       - name: Upload dependency-check HTML report
         if: always()
