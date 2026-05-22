@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.4.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.4.xsd https://dependency-check.github.io/DependencyCheck/dependency-suppression.1.4.xsd">
+    <suppress>
+        <notes><![CDATA[
+        file name: prometheus metrics false positive
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/(io\.prometheus|io\.micrometer)/.*$</packageUrl>
+        <cpe>cpe:/a:prometheus:prometheus</cpe>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+    file name: tomcat-embed false positive
+    ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat-embed-.*$</packageUrl>
+        <cve>CVE-2026-41293</cve>
+        <cve>CVE-2026-43512</cve>
+        <cve>CVE-2026-43515</cve>
+    </suppress>
+</suppressions>

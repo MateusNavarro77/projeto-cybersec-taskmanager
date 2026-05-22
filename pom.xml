@@ -19,7 +19,9 @@
 		<license />
 	</licenses>
 	<developers>
-		<developer />
+		<developer>
+			<name>Mateus</name>
+		</developer>
 	</developers>
 	<scm>
 		<connection />
@@ -160,6 +162,27 @@
 								</path>
 							</annotationProcessorPaths>
 						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.owasp</groupId>
+				<artifactId>dependency-check-maven</artifactId>
+				<version>12.2.2</version>
+				<configuration>
+					<suppressionFiles>
+						<suppressionFile>supression.xml</suppressionFile>
+					</suppressionFiles>
+					<failBuildOnCVSS>8</failBuildOnCVSS>
+					<nvdApiKey>${nvd.api.key}</nvdApiKey>
+
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>check</goal>
+						</goals>
 					</execution>
 				</executions>
 			</plugin>
