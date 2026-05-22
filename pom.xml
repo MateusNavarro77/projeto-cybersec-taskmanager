@@ -171,6 +171,9 @@
 				<artifactId>dependency-check-maven</artifactId>
 				<version>12.2.2</version>
 				<configuration>
+					<suppressionFiles>
+						<suppressionFile>supression.xml</suppressionFile>
+					</suppressionFiles>
 					<failBuildOnCVSS>8</failBuildOnCVSS>
 					<nvdApiKey>${nvd.api.key}</nvdApiKey>
 
