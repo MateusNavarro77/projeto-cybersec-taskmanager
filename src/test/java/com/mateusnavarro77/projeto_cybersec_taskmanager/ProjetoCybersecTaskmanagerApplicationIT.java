@@ -8,7 +8,7 @@ import org.springframework.test.context.ActiveProfiles;
 @Import(TestcontainersConfiguration.class)
 @SpringBootTest
 @ActiveProfiles("integrationtest")
-class ProjetoCybersecTaskmanagerApplicationTests {
+class ProjetoCybersecTaskmanagerApplicationIT {
 
 	@Test
 	void contextLoads() {
