@@ -1,0 +1,41 @@
+name: Analise SonarQube Cloud
+
+on:
+  workflow_call:
+    secrets:
+      SONAR_TOKEN:
+        required: true
+
+jobs:
+  sonar-analysis:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-java-maven
+
+      - name: Download unit test coverage report
+        uses: actions/download-artifact@v4
+        with:
+          name: jacoco-unit-coverage-report
+          path: target/site/jacoco-unit
+
+      - name: Download integration test coverage report
+        uses: actions/download-artifact@v4
+        with:
+          name: jacoco-integration-coverage-report
+          path: target/site/jacoco-it
+
+      - name: Run maven Sonar plugin analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          ./mvnw -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+            -DskipTests \
+            -DskipITs \
+            -Djacoco.skip=true \
+            -Ddependency-check.skip=true \
+            -Dsonar.region=us \
+            -Dsonar.organization=mateus-navarro-projeto-devsecops \
+            -Dsonar.projectKey=MateusNavarro77_projeto-cybersec-taskmanager \
+            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco-unit/jacoco.xml,target/site/jacoco-it/jacoco.xml
