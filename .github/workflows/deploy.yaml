@@ -1,4 +1,4 @@
-name: Deploy Pipeline
+name: Pipeline de Deploy (Entrega Contínua)
 
 on:
   push:
