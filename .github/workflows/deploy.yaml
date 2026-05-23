@@ -33,5 +33,5 @@ jobs:
       - integration-tests
       - dependency-check
 
-    uses: ./.github/workflows/build-image.yml
+    uses: ./.github/workflows/build-image.yaml
     secrets: inherit
