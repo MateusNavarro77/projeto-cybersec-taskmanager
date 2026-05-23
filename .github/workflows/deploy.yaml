@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-
   workflow_dispatch:
 
 permissions:
@@ -34,5 +33,5 @@ jobs:
       - integration-tests
       - dependency-check
 
-    uses: ./.github/workflows/reusable-build-image.yml
+    uses: ./.github/workflows/build-image.yml
     secrets: inherit
