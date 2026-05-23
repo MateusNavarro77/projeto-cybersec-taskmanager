@@ -1,0 +1,22 @@
+name: Configura JDK 21 e Maven
+
+description: Configura o ambiente Java 21 e Maven para os workflows de CI/CD.
+
+runs:
+  using: "composite"
+
+  steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        distribution: temurin
+        java-version: "21"
+        architecture: x64
+        cache: maven
+
+    - name: Make Maven wrapper executable
+      shell: bash
+      run: chmod +x ./mvnw

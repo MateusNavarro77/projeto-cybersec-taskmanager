@@ -1,9 +1,10 @@
-name: Build and Publish Image
+name: Pipeline de Deploy (Entrega Contínua)
 
 on:
   push:
     branches:
       - main
+
   workflow_dispatch:
 
 permissions:
@@ -12,135 +13,26 @@ permissions:
   packages: write
 
 concurrency:
-  group: build-image-${{ github.ref }}
+  group: deploy-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
-  dependency-check:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up JDK 21
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: "21"
-          architecture: x64
-          cache: maven
-
-      - name: Make Maven wrapper executable
-        run: chmod +x ./mvnw
-
-      - name: Get date for cache key
-        id: date
-        run: echo "date=$(date +'%Y-%m')" >> $GITHUB_OUTPUT
-
-      - name: Restore OWASP Dependency Check Database
-        id: dependency-check-cache-restore
-        uses: actions/cache/restore@v4
-        with:
-          path: ~/.dependency-check
-          key: dependency-check-database-${{ runner.os }}-${{ steps.date.outputs.date }}
-          restore-keys: |
-            dependency-check-database-${{ runner.os }}-
-
-      - name: Run OWASP dependency check
-        run: ./mvnw -B dependency-check:check -Dnvd.api.key=${{ secrets.NVD_API_KEY }} -DdataDirectory=$HOME/.dependency-check
-
-      - name: Save OWASP Dependency Check Database
-        if: always()
-        uses: actions/cache/save@v4
-        with:
-          path: ~/.dependency-check
-          key: dependency-check-database-${{ runner.os }}-${{ steps.date.outputs.date }}
-
-      - name: Upload dependency-check HTML report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: dependency-check-html-report
-          path: target/dependency-check-report.html
-          if-no-files-found: warn
-
   unit-tests:
-    runs-on: ubuntu-latest
+    uses: ./.github/workflows/unit-test.yaml
 
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+  integration-tests:
+    uses: ./.github/workflows/integration-tests.yaml
 
-      - name: Set up JDK 21
-        uses: actions/setup-java@v4
-        with:
-          java-version: "21"
-          distribution: "temurin"
-          cache: maven
+  dependency-check:
+    uses: ./.github/workflows/dependency-check.yaml
+    secrets:
+      NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
 
-      - name: Make Maven wrapper executable
-        run: chmod +x ./mvnw
-
-      - name: Run Unit Tests with Coverage
-        run: ./mvnw test -Dspring.profiles.active=unittest
-
-      - name: Upload Coverage Report
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: jacoco-coverage-report
-          path: target/site/jacoco/
-
-  publish-image:
+  build-image:
     needs:
-      - dependency-check
       - unit-tests
-    runs-on: ubuntu-latest
+      - integration-tests
+      - dependency-check
 
-    steps:
-      - name: Check out source
-        uses: actions/checkout@v4
-
-      - name: Set up JDK 21
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: "21"
-          cache: maven
-
-      - name: Make Maven wrapper executable
-        run: chmod +x ./mvnw
-
-      - name: Package application for Docker image
-        run: ./mvnw -B -DskipTests package
-
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Set lowercase image name
-        id: image
-        run: |
-          owner="${GITHUB_REPOSITORY_OWNER,,}"
-          repo="${GITHUB_REPOSITORY#*/}"
-          repo="${repo,,}"
-          echo "image=ghcr.io/${owner}/${repo}" >> "$GITHUB_OUTPUT"
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: ./Dockerfile.prod
-          push: true
-          tags: |
-            ${{ steps.image.outputs.image }}:latest
-            ${{ steps.image.outputs.image }}:${{ github.sha }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+    uses: ./.github/workflows/reusable-build-image.yml
+    secrets: inherit

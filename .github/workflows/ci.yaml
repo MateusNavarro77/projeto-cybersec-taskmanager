@@ -1,0 +1,23 @@
+name: Pipeline de CI (Integração Contínua)
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+jobs:
+  unit-tests:
+    uses: ./.github/workflows/unit-test.yaml
+
+  integration-tests:
+    uses: ./.github/workflows/integration-tests.yaml
+
+  dependency-check:
+    uses: ./.github/workflows/dependency-check.yaml
+    secrets:
+      NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
