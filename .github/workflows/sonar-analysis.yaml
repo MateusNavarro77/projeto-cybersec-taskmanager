@@ -30,12 +30,11 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          ./mvnw -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+          ./mvnw -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:5.6.0.6792:sonar \
             -DskipTests \
             -DskipITs \
             -Djacoco.skip=true \
             -Ddependency-check.skip=true \
-            -Dsonar.region=us \
-            -Dsonar.organization=mateus-navarro-projeto-devsecops \
+            -Dsonar.organization=mateusnavarro77 \
             -Dsonar.projectKey=MateusNavarro77_projeto-cybersec-taskmanager \
             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco-unit/jacoco.xml,target/site/jacoco-it/jacoco.xml
