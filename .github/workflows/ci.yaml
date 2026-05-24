@@ -21,3 +21,12 @@ jobs:
     uses: ./.github/workflows/dependency-check.yaml
     secrets:
       NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
+
+  sonar-analysis:
+    needs:
+      - unit-tests
+      - integration-tests
+      - dependency-check
+    uses: ./.github/workflows/sonar-analysis.yaml
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

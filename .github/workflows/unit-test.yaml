@@ -19,5 +19,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: jacoco-unit-coverage-report
-          path: target/site/jacoco/
+          path: target/site/jacoco-unit/
           if-no-files-found: warn
