@@ -1,0 +1,36 @@
+name: Deploy via SSH
+
+on:
+  workflow_call:
+    secrets:
+      SSH_HOST:
+        required: true
+      SSH_USER:
+        required: true
+      SSH_PRIVATE_KEY:
+        required: true
+      SSH_PORT:
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  ssh-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy production stack over SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script_stop: true
+          script: |
+            set -e
+            cd /home/mateus77azure/app/projeto-cybersec-deploy
+            docker compose -f docker-compose.yaml pull
+            docker compose -f docker-compose.yaml up -d
+            docker image prune -af
