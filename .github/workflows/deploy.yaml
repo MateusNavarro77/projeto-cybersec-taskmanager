@@ -42,6 +42,14 @@ jobs:
       - integration-tests
       - dependency-check
       - sonar-analysis
-
     uses: ./.github/workflows/build-image.yaml
-    secrets: inherit
+
+  ssh-deploy:
+    needs:
+      - build-image
+    uses: ./.github/workflows/ssh-deploy.yaml
+    secrets:
+      SSH_HOST: ${{ secrets.SSH_HOST }}
+      SSH_USER: ${{ secrets.SSH_USER }}
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      SSH_PORT: ${{ secrets.SSH_PORT }}
