@@ -11,6 +11,9 @@ spring:
     show-sql: false
     database-platform: org.hibernate.dialect.H2Dialect
 
+  flyway:
+    enabled: false
+
   h2:
     console:
       enabled: true

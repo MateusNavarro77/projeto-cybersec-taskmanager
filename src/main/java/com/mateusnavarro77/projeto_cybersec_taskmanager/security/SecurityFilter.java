@@ -13,9 +13,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
+
+    public static final String AUTH_COOKIE_NAME = "TASKMANAGER_AUTH";
 
     @Autowired
     private TokenService tokenService;
@@ -41,7 +44,18 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     private String recoverToken(HttpServletRequest request) {
         var authHeader = request.getHeader("Authorization");
-        if (authHeader == null) return null;
-        return authHeader.replace("Bearer ", "");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            return authHeader.replace("Bearer ", "");
+        }
+
+        if (request.getCookies() == null) {
+            return null;
+        }
+
+        return Arrays.stream(request.getCookies())
+                .filter(cookie -> AUTH_COOKIE_NAME.equals(cookie.getName()))
+                .map(cookie -> cookie.getValue())
+                .findFirst()
+                .orElse(null);
     }
 }
