@@ -7,7 +7,7 @@ import com.mateusnavarro77.projeto_cybersec_taskmanager.entity.Task;
 import com.mateusnavarro77.projeto_cybersec_taskmanager.entity.User;
 import com.mateusnavarro77.projeto_cybersec_taskmanager.repository.ChecklistRepository;
 import com.mateusnavarro77.projeto_cybersec_taskmanager.repository.TaskRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -17,13 +17,12 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class TaskService {
 
-    @Autowired
-    private TaskRepository taskRepository;
+    private final TaskRepository taskRepository;
 
-    @Autowired
-    private ChecklistRepository checklistRepository;
+    private final ChecklistRepository checklistRepository;
 
     public TaskResponseDTO create(TaskRequestDTO dto, User user) {
         Checklist checklist = null;
