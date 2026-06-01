@@ -5,6 +5,7 @@ import com.mateusnavarro77.projeto_cybersec_taskmanager.dto.TaskResponseDTO;
 import com.mateusnavarro77.projeto_cybersec_taskmanager.entity.Checklist;
 import com.mateusnavarro77.projeto_cybersec_taskmanager.entity.Task;
 import com.mateusnavarro77.projeto_cybersec_taskmanager.entity.User;
+import com.mateusnavarro77.projeto_cybersec_taskmanager.exception.ResourceNotFoundException;
 import com.mateusnavarro77.projeto_cybersec_taskmanager.repository.ChecklistRepository;
 import com.mateusnavarro77.projeto_cybersec_taskmanager.repository.TaskRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,8 +16,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -132,8 +131,7 @@ public class TaskServiceTest {
             given(checklistRepository.findByIdAndUser(checklistId, user)).willReturn(Optional.empty());
 
             assertThatThrownBy(() -> taskService.create(request, user))
-                    .isInstanceOf(ResponseStatusException.class)
-                    .hasFieldOrPropertyWithValue("status", HttpStatus.NOT_FOUND)
+                    .isInstanceOf(ResourceNotFoundException.class)
                     .hasMessageContaining("Checklist not found");
         }
     }
@@ -191,8 +189,7 @@ public class TaskServiceTest {
             given(taskRepository.findByIdAndUser(taskId, user)).willReturn(Optional.empty());
 
             assertThatThrownBy(() -> taskService.findById(taskId, user))
-                    .isInstanceOf(ResponseStatusException.class)
-                    .hasFieldOrPropertyWithValue("status", HttpStatus.NOT_FOUND)
+                    .isInstanceOf(ResourceNotFoundException.class)
                     .hasMessageContaining("Task not found");
         }
     }
@@ -235,8 +232,7 @@ public class TaskServiceTest {
             given(taskRepository.findByIdAndUser(taskId, user)).willReturn(Optional.empty());
 
             assertThatThrownBy(() -> taskService.update(taskId, request, user))
-                    .isInstanceOf(ResponseStatusException.class)
-                    .hasFieldOrPropertyWithValue("status", HttpStatus.NOT_FOUND)
+                    .isInstanceOf(ResourceNotFoundException.class)
                     .hasMessageContaining("Task not found");
         }
         
@@ -252,8 +248,7 @@ public class TaskServiceTest {
             given(checklistRepository.findByIdAndUser(checklistId, user)).willReturn(Optional.empty());
 
             assertThatThrownBy(() -> taskService.update(taskId, request, user))
-                    .isInstanceOf(ResponseStatusException.class)
-                    .hasFieldOrPropertyWithValue("status", HttpStatus.NOT_FOUND)
+                    .isInstanceOf(ResourceNotFoundException.class)
                     .hasMessageContaining("Checklist not found");
         }
     }
@@ -288,8 +283,7 @@ public class TaskServiceTest {
             given(taskRepository.findByIdAndUser(taskId, user)).willReturn(Optional.empty());
 
             assertThatThrownBy(() -> taskService.complete(taskId, user))
-                    .isInstanceOf(ResponseStatusException.class)
-                    .hasFieldOrPropertyWithValue("status", HttpStatus.NOT_FOUND)
+                    .isInstanceOf(ResourceNotFoundException.class)
                     .hasMessageContaining("Task not found");
         }
     }
@@ -340,8 +334,7 @@ public class TaskServiceTest {
             given(taskRepository.findByIdAndUser(taskId, user)).willReturn(Optional.empty());
 
             assertThatThrownBy(() -> taskService.delete(taskId, user))
-                    .isInstanceOf(ResponseStatusException.class)
-                    .hasFieldOrPropertyWithValue("status", HttpStatus.NOT_FOUND)
+                    .isInstanceOf(ResourceNotFoundException.class)
                     .hasMessageContaining("Task not found");
         }
     }

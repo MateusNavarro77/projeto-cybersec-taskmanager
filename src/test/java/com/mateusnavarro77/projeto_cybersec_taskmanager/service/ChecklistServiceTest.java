@@ -5,6 +5,7 @@ import com.mateusnavarro77.projeto_cybersec_taskmanager.dto.ChecklistResponseDTO
 import com.mateusnavarro77.projeto_cybersec_taskmanager.entity.Checklist;
 import com.mateusnavarro77.projeto_cybersec_taskmanager.entity.Task;
 import com.mateusnavarro77.projeto_cybersec_taskmanager.entity.User;
+import com.mateusnavarro77.projeto_cybersec_taskmanager.exception.ResourceNotFoundException;
 import com.mateusnavarro77.projeto_cybersec_taskmanager.repository.ChecklistRepository;
 import com.mateusnavarro77.projeto_cybersec_taskmanager.repository.TaskRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,8 +16,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -122,8 +121,7 @@ public class ChecklistServiceTest {
             given(checklistRepository.findByIdAndUser(checklistId, user)).willReturn(Optional.empty());
 
             assertThatThrownBy(() -> checklistService.findById(checklistId, user))
-                    .isInstanceOf(ResponseStatusException.class)
-                    .hasFieldOrPropertyWithValue("status", HttpStatus.NOT_FOUND)
+                    .isInstanceOf(ResourceNotFoundException.class)
                     .hasMessageContaining("Checklist not found");
         }
     }
@@ -163,8 +161,7 @@ public class ChecklistServiceTest {
             given(checklistRepository.findByIdAndUser(checklistId, user)).willReturn(Optional.empty());
 
             assertThatThrownBy(() -> checklistService.update(checklistId, request, user))
-                    .isInstanceOf(ResponseStatusException.class)
-                    .hasFieldOrPropertyWithValue("status", HttpStatus.NOT_FOUND)
+                    .isInstanceOf(ResourceNotFoundException.class)
                     .hasMessageContaining("Checklist not found");
         }
     }
@@ -189,8 +186,7 @@ public class ChecklistServiceTest {
             given(checklistRepository.findByIdAndUser(checklistId, user)).willReturn(Optional.empty());
 
             assertThatThrownBy(() -> checklistService.delete(checklistId, user))
-                    .isInstanceOf(ResponseStatusException.class)
-                    .hasFieldOrPropertyWithValue("status", HttpStatus.NOT_FOUND)
+                    .isInstanceOf(ResourceNotFoundException.class)
                     .hasMessageContaining("Checklist not found");
         }
     }
@@ -227,8 +223,7 @@ public class ChecklistServiceTest {
             given(checklistRepository.findByIdAndUser(checklistId, user)).willReturn(Optional.empty());
 
             assertThatThrownBy(() -> checklistService.listTasks(checklistId, user))
-                    .isInstanceOf(ResponseStatusException.class)
-                    .hasFieldOrPropertyWithValue("status", HttpStatus.NOT_FOUND)
+                    .isInstanceOf(ResourceNotFoundException.class)
                     .hasMessageContaining("Checklist not found");
         }
     }

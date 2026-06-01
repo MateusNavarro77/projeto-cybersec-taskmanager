@@ -5,17 +5,16 @@ import com.mateusnavarro77.projeto_cybersec_taskmanager.dto.LoginRequestDTO;
 import com.mateusnavarro77.projeto_cybersec_taskmanager.dto.RegisterRequestDTO;
 import com.mateusnavarro77.projeto_cybersec_taskmanager.dto.UserResponseDTO;
 import com.mateusnavarro77.projeto_cybersec_taskmanager.entity.User;
+import com.mateusnavarro77.projeto_cybersec_taskmanager.exception.BusinessException;
 import com.mateusnavarro77.projeto_cybersec_taskmanager.repository.UserRepository;
 import com.mateusnavarro77.projeto_cybersec_taskmanager.security.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -49,9 +48,7 @@ public class AuthService {
                     .build();
 
         } catch (DataIntegrityViolationException e) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Email already exists");
+            throw new BusinessException("Email already exists");
         }
     }
 

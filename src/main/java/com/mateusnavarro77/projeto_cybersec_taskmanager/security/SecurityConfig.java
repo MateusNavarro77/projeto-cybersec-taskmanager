@@ -1,6 +1,5 @@
 package com.mateusnavarro77.projeto_cybersec_taskmanager.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

@@ -5,6 +5,7 @@ import com.mateusnavarro77.projeto_cybersec_taskmanager.dto.LoginRequestDTO;
 import com.mateusnavarro77.projeto_cybersec_taskmanager.dto.RegisterRequestDTO;
 import com.mateusnavarro77.projeto_cybersec_taskmanager.dto.UserResponseDTO;
 import com.mateusnavarro77.projeto_cybersec_taskmanager.entity.User;
+import com.mateusnavarro77.projeto_cybersec_taskmanager.exception.BusinessException;
 import com.mateusnavarro77.projeto_cybersec_taskmanager.repository.UserRepository;
 import com.mateusnavarro77.projeto_cybersec_taskmanager.security.TokenService;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +16,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,9 +23,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -92,8 +90,7 @@ public class AuthServiceTest {
             given(userRepository.save(any(User.class))).willThrow(new DataIntegrityViolationException("duplicate"));
 
             assertThatThrownBy(() -> authService.register(request))
-                    .isInstanceOf(ResponseStatusException.class)
-                    .hasFieldOrPropertyWithValue("status", HttpStatus.BAD_REQUEST)
+                    .isInstanceOf(BusinessException.class)
                     .hasMessageContaining("Email already exists");
         }
     }
