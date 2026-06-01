@@ -144,7 +144,7 @@ public class AuthControllerIT {
             mockMvc.perform(post("/api/v1/auth/login")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(loginRequest)))
-                    .andExpect(status().isForbidden()); // Spring security typically returns 403 or 401 for bad credentials
+                    .andExpect(status().isUnauthorized()); // Updated from isForbidden() to isUnauthorized()
         }
 
         @Test
@@ -154,7 +154,7 @@ public class AuthControllerIT {
             mockMvc.perform(post("/api/v1/auth/login")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(loginRequest)))
-                    .andExpect(status().isForbidden());
+                    .andExpect(status().isUnauthorized()); // Updated from isForbidden() to isUnauthorized()
         }
     }
 

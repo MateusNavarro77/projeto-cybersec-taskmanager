@@ -5,32 +5,28 @@ import com.mateusnavarro77.projeto_cybersec_taskmanager.dto.LoginRequestDTO;
 import com.mateusnavarro77.projeto_cybersec_taskmanager.dto.RegisterRequestDTO;
 import com.mateusnavarro77.projeto_cybersec_taskmanager.dto.UserResponseDTO;
 import com.mateusnavarro77.projeto_cybersec_taskmanager.entity.User;
+import com.mateusnavarro77.projeto_cybersec_taskmanager.exception.BusinessException;
 import com.mateusnavarro77.projeto_cybersec_taskmanager.repository.UserRepository;
 import com.mateusnavarro77.projeto_cybersec_taskmanager.security.TokenService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
+@RequiredArgsConstructor
 public class AuthService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private TokenService tokenService;
+    private final TokenService tokenService;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
     public UserResponseDTO register(RegisterRequestDTO data) {
         String encryptedPassword = passwordEncoder.encode(data.password());
@@ -52,9 +48,7 @@ public class AuthService {
                     .build();
 
         } catch (DataIntegrityViolationException e) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Email already exists");
+            throw new BusinessException("Email already exists");
         }
     }
 

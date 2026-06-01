@@ -5,7 +5,7 @@ import com.mateusnavarro77.projeto_cybersec_taskmanager.dto.TaskResponseDTO;
 import com.mateusnavarro77.projeto_cybersec_taskmanager.entity.User;
 import com.mateusnavarro77.projeto_cybersec_taskmanager.service.TaskService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,10 +16,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/tasks")
+@RequiredArgsConstructor
 public class TaskController {
 
-    @Autowired
-    private TaskService taskService;
+    private final TaskService taskService;
 
     @PostMapping
     public ResponseEntity<TaskResponseDTO> create(

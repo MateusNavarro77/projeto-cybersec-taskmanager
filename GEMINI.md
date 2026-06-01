@@ -68,4 +68,3 @@ When the app is running, Swagger UI is available at:
 - `src/main/resources/application.yaml`: Main configuration (DB, JWT, etc.).
 - `src/main/java/.../security/SecurityConfig.java`: Security filter chain and endpoint permissions.
 - `src/main/resources/db/migration/V1__init_schema.sql`: Initial database schema.
-- `AGENTS.md`: Technical summary for quick reference.

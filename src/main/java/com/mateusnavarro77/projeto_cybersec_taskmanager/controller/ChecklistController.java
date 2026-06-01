@@ -5,7 +5,7 @@ import com.mateusnavarro77.projeto_cybersec_taskmanager.dto.ChecklistResponseDTO
 import com.mateusnavarro77.projeto_cybersec_taskmanager.entity.User;
 import com.mateusnavarro77.projeto_cybersec_taskmanager.service.ChecklistService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,10 +16,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/checklists")
+@RequiredArgsConstructor
 public class ChecklistController {
 
-    @Autowired
-    private ChecklistService checklistService;
+    private final ChecklistService checklistService;
 
     @PostMapping
     public ResponseEntity<ChecklistResponseDTO> create(

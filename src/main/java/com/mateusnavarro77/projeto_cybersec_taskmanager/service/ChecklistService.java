@@ -4,25 +4,23 @@ import com.mateusnavarro77.projeto_cybersec_taskmanager.dto.ChecklistRequestDTO;
 import com.mateusnavarro77.projeto_cybersec_taskmanager.dto.ChecklistResponseDTO;
 import com.mateusnavarro77.projeto_cybersec_taskmanager.entity.Checklist;
 import com.mateusnavarro77.projeto_cybersec_taskmanager.entity.User;
+import com.mateusnavarro77.projeto_cybersec_taskmanager.exception.ResourceNotFoundException;
 import com.mateusnavarro77.projeto_cybersec_taskmanager.repository.ChecklistRepository;
 import com.mateusnavarro77.projeto_cybersec_taskmanager.repository.TaskRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ChecklistService {
 
-    @Autowired
-    private ChecklistRepository checklistRepository;
+    private final ChecklistRepository checklistRepository;
 
-    @Autowired
-    private TaskRepository taskRepository;
+    private final TaskRepository taskRepository;
 
     public ChecklistResponseDTO create(ChecklistRequestDTO dto, User user) {
         Checklist checklist = Checklist.builder()
@@ -44,13 +42,13 @@ public class ChecklistService {
 
     public ChecklistResponseDTO findById(UUID id, User user) {
         Checklist checklist = checklistRepository.findByIdAndUser(id, user)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Checklist not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Checklist not found"));
         return mapToResponseDTO(checklist);
     }
 
     public ChecklistResponseDTO update(UUID id, ChecklistRequestDTO dto, User user) {
         Checklist checklist = checklistRepository.findByIdAndUser(id, user)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Checklist not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Checklist not found"));
         
         checklist.setTitle(dto.title());
         checklist.setDescription(dto.description());
@@ -61,13 +59,13 @@ public class ChecklistService {
 
     public void delete(UUID id, User user) {
         Checklist checklist = checklistRepository.findByIdAndUser(id, user)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Checklist not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Checklist not found"));
         checklistRepository.delete(checklist);
     }
 
     public List<?> listTasks(UUID id, User user) {
         Checklist checklist = checklistRepository.findByIdAndUser(id, user)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Checklist not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Checklist not found"));
         
         // Return tasks associated with this checklist. 
         // Note: TaskResponseDTO isn't created yet, so returning raw entities for now 
