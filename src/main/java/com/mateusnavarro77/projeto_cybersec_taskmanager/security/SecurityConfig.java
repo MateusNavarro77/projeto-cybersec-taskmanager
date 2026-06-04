@@ -32,6 +32,11 @@ public class SecurityConfig {
         return httpSecurity
                 .csrf(csrf -> csrf.disable()) // NOSONAR - Stateless API using JWTs
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .headers(headers -> headers
+                        .crossOriginResourcePolicy(org.springframework.security.config.Customizer.withDefaults())
+                        .crossOriginEmbedderPolicy(org.springframework.security.config.Customizer.withDefaults())
+                        .crossOriginOpenerPolicy(org.springframework.security.config.Customizer.withDefaults())
+                )
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/register").permitAll()
