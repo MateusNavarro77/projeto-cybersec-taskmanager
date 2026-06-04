@@ -12,21 +12,35 @@ on:
 
 jobs:
   unit-tests:
+    name: Testes Unitários
     uses: ./.github/workflows/unit-test.yaml
 
   integration-tests:
+    name: Testes de Integração
     uses: ./.github/workflows/integration-tests.yaml
 
   dependency-check:
+    name: Verificação de Dependências (SCA - Software Composition Analysis)
     uses: ./.github/workflows/dependency-check.yaml
     secrets:
       NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
 
   sonar-analysis:
+    name: Análise SonarQube (SAST - Static Application Security Testing)
     needs:
       - unit-tests
       - integration-tests
       - dependency-check
     uses: ./.github/workflows/sonar-analysis.yaml
+
+  zap-api-scan:
+    name: Análise de Segurança de API com OWASP ZAP (DAST - Dynamic Application Security Testing)
+    needs:
+      - unit-tests
+      - integration-tests
+      - dependency-check
+      - sonar-analysis
+    uses: ./.github/workflows/zap-api-scan.yaml
+
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

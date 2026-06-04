@@ -1,0 +1,51 @@
+name: OWASP ZAP API Scan
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  zap-api-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: ./.github/actions/setup-java-maven
+
+      - name: Package application
+        run: ./mvnw -B -DskipTests package -Ddependency-check.skip=true
+
+      - name: Start local application
+        run: |
+          nohup java -jar target/*.jar --spring.profiles.active=unittest > app.log 2>&1 &
+          echo $! > app.pid
+
+      - name: Wait for local API docs
+        run: |
+          for i in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:8080/v3/api-docs >/dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+
+          echo 'Application did not become ready in time'
+          cat app.log
+          exit 1
+
+      - name: Run ZAP API Scan
+        uses: zaproxy/action-api-scan@v0.10.0
+        with:
+          target: http://127.0.0.1:8080/v3/api-docs
+          fail_action: true
+          allow_issue_writing: false
+          artifact_name: zap-api-scan
+          cmd_options: -a
+
+      - name: Stop local application
+        if: always()
+        run: |
+          if [ -f app.pid ]; then
+            kill "$(cat app.pid)" || true
+          fi
