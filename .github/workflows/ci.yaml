@@ -32,7 +32,8 @@ jobs:
       - integration-tests
       - dependency-check
     uses: ./.github/workflows/sonar-analysis.yaml
-
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   zap-api-scan:
     name: Análise de Segurança de API com OWASP ZAP (DAST - Dynamic Application Security Testing)
     needs:
@@ -42,5 +43,4 @@ jobs:
       - sonar-analysis
     uses: ./.github/workflows/zap-api-scan.yaml
 
-    secrets:
-      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
