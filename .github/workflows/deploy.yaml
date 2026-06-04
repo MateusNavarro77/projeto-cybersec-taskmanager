@@ -17,17 +17,21 @@ concurrency:
 
 jobs:
   unit-tests:
+    name: Testes Unitários
     uses: ./.github/workflows/unit-test.yaml
 
   integration-tests:
+    name: Testes de Integração
     uses: ./.github/workflows/integration-tests.yaml
 
   dependency-check:
+    name: Verificação de Dependências (SCA - Software Composition Analysis)
     uses: ./.github/workflows/dependency-check.yaml
     secrets:
       NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
 
   sonar-analysis:
+    name: Análise SonarQube (SAST - Static Application Security Testing)
     needs:
       - unit-tests
       - integration-tests
@@ -36,15 +40,27 @@ jobs:
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-  build-image:
+  zap-api-scan:
+    name: Análise de Segurança de API com OWASP ZAP (DAST - Dynamic Application Security Testing)
     needs:
       - unit-tests
       - integration-tests
       - dependency-check
       - sonar-analysis
+    uses: ./.github/workflows/zap-api-scan.yaml
+
+  build-image:
+    name: Build e Push da Imagem Docker
+    needs:
+      - unit-tests
+      - integration-tests
+      - dependency-check
+      - sonar-analysis
+      - zap-api-scan
     uses: ./.github/workflows/build-image.yaml
 
   ssh-deploy:
+    name: Deploy via SSH
     needs:
       - build-image
     uses: ./.github/workflows/ssh-deploy.yaml
