@@ -36,5 +36,7 @@ jobs:
             -Djacoco.skip=true \
             -Ddependency-check.skip=true \
             -Dsonar.organization=mateusnavarro77 \
+            -Dsonar.qualitygate.wait=true \
+            -Dsonar.qualitygate.timeout=300 \
             -Dsonar.projectKey=MateusNavarro77_projeto-cybersec-taskmanager \
             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco-unit/jacoco.xml,target/site/jacoco-it/jacoco.xml
