@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -102,6 +103,13 @@ public class AuthControllerIT {
             
             // Verify no user was created
             assertThat(userRepository.count()).isZero();
+        }
+
+        @Test
+        @DisplayName("Este teste falha propositalmente para demonstrar uma falha de integração")
+        void testeDeIntegracaoFalho() throws Exception {
+           var resultado = 2+2;
+           assertTrue(resultado == 5, "Este teste falha propositalmente para demonstrar uma falha de integração");
         }
     }
 
