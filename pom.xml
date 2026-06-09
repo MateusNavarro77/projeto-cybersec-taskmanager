@@ -32,6 +32,8 @@
 	<properties>
 		<java.version>21</java.version>
 		<sonar.organization>mateusnavarro77</sonar.organization>
+		<tomcat.version>11.0.22</tomcat.version>
+		<postgresql.version>42.7.11</postgresql.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -59,6 +61,11 @@
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 			<version>3.0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>swagger-ui</artifactId>
+			<version>5.32.6</version>
 		</dependency>
 
 		<dependency>
@@ -259,9 +266,9 @@
 				<artifactId>dependency-check-maven</artifactId>
 				<version>12.2.2</version>
 				<configuration>
-					<suppressionFiles>
+					<!-- <suppressionFiles>
 						<suppressionFile>supression.xml</suppressionFile>
-					</suppressionFiles>
+					</suppressionFiles> -->
 					<failBuildOnCVSS>8</failBuildOnCVSS>
 					<nvdApiKey>${nvd.api.key}</nvdApiKey>
 
